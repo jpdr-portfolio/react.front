@@ -1,5 +1,5 @@
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useMsal } from "@azure/msal-react";
 import Editor from './component/Editor';
 
@@ -10,7 +10,12 @@ function App() {
   const { instance, accounts } = useMsal();
   const [data, setData] = useState(null);  
 
+  const initInstance = useCallback( async (instance) => {
+    await instance.initialize();
+  },[]);  
+
   useEffect(() => {
+    initInstance(instance);
     instance.handleRedirectPromise()
       .then(async (response) => {
         let account = null;
@@ -60,7 +65,7 @@ function App() {
 
 
         
-  }, [instance, accounts]);
+  }, [instance, initInstance,accounts]);
 
   const login = () => {
     instance.loginRedirect({prompt : "login"});

@@ -3,6 +3,7 @@ import { useMsal } from "@azure/msal-react";
 
 const backendServerNotesUrl = process.env.REACT_APP_BACKED_SERVER_URL_NOTES;
 const request = {scopes: [process.env.REACT_APP_AZURE_SCOPE]};
+const azureRedirectUrl = process.env.REACT_APP_AZURE_REDIRECT_URL;
 
 function Editor() {
   const [notes, setNotes] = useState([]);
@@ -50,9 +51,7 @@ function Editor() {
 
     instance.acquireTokenSilent({ ...request, account: activeAccount })
     .then((response) => {
-      const token = response.accessToken;
-      console.debug(token);
-
+      const token = response.accessToken;      
       return fetch(backendServerNotesUrl, {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -84,9 +83,7 @@ function Editor() {
 
     instance.acquireTokenSilent({ ...request, account: activeAccount })
     .then((response) => {
-      const token = response.accessToken;
-      console.debug(token);
-
+      const token = response.accessToken;      
       return fetch(`${backendServerNotesUrl}/${id}/remove`, {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -106,6 +103,9 @@ function Editor() {
     }); 
 };    
  
+const handleLogout = async () => {
+  instance.logoutRedirect({postLogoutRedirectUri: azureRedirectUrl});
+};
 
 
   return (
@@ -140,6 +140,9 @@ function Editor() {
           </li>
         ))}
       </ul>
+      <button onClick={handleLogout}
+      style={{border: "1px solid #ccc",borderRadius: "2px",padding: "8px 12px",}}      
+      >Logout</button>  
     </div>
   );
 

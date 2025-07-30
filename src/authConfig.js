@@ -9,7 +9,7 @@ export const msalConfig = {
          clientId: azureClientId, 
          authority: 'https://login.microsoftonline.com/' + azureTenantId + "/v2.0", 
          redirectUri: azureRedirectUrl, 
-         postLogoutRedirectUri: '/', 
+         postLogoutRedirectUri: azureRedirectUrl, 
          navigateToLoginRequestUrl: false, 
      },
      cache: {
@@ -27,7 +27,7 @@ export const msalConfig = {
                          console.error(message);
                          return;
                      case LogLevel.Info:
-                         console.info(message);
+                         //console.info(message);
                          return;
                      case LogLevel.Verbose:
                          console.debug(message);
